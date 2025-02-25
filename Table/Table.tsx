@@ -644,7 +644,7 @@ const LocalRow = ({ children, type = 'basic', id, headers, row, tableElement, cl
           });
         },
         {
-          rootMargin: '500px 500px 500px 500px',
+          rootMargin: '500px 5000px 500px 5000px',
           threshold: 0,
         }
       );

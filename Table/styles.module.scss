@@ -55,7 +55,7 @@
     overflow: auto;
 
     .rowWrapper {
-      width: auto;
+      width: min-content;
       height: auto;
       color: #4b5a68;
       font-weight: 400;
@@ -204,6 +204,7 @@
   .valuesPicker {
     width: 100%;
     height: auto;
+    background-color: white;
     max-height: 500px;
     overflow: auto;
     display: flex;

@@ -19,11 +19,16 @@ import styles from './styles.module.scss';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import DataPicker from './DataPicker/DataPicker';
 
+import { useSignals } from '@preact/signals-react/runtime';
+import { signal } from '@preact/signals-react';
+
 type TableRowData = { id: string; isSelected: boolean; isNew: boolean; isModified: boolean };
 type Headers = { key: string; displayName: string }[];
 type CellDataType = 'string' | 'number' | 'date' | 'relation' | 'null' | 'values' | 'boleanValues' | 'checkbox';
 
 export type { TableRowData, Headers };
+
+const isUpdatingDataSignal = signal(false);
 
 const SetDataContext = createContext<null | Dispatch<SetStateAction<TableRowData[]>>>(null);
 const InitialDataContext = createContext<TableRowData[]>([]);
@@ -232,6 +237,8 @@ const LocalCell = ({
   setRelationTableData,
   onSearch,
 }: LocalCellProps) => {
+  useSignals();
+
   cellDataType = getCellDataType(children);
 
   if (cellDataType === 'boleanValues') {
@@ -251,13 +258,28 @@ const LocalCell = ({
 
   const [hasFocus, setHasFocus] = useState(false);
 
+  const initialCellValueBeforeRef = useRef<string | boolean | undefined>(undefined);
+
   const initialCellValue = useMemo(() => {
     if (cellDataType !== 'relation' && initialData.length !== 0) {
       const rowData = initialData.find((data) => data.id === rowId);
 
       if (rowData) {
-        return rowData[objectProperty as keyof typeof rowData];
+        if (
+          initialCellValueBeforeRef.current === undefined ||
+          (initialCellValueBeforeRef.current !== undefined && isUpdatingDataSignal.value === false)
+        ) {
+          initialCellValueBeforeRef.current = rowData[objectProperty as keyof typeof rowData];
+
+          return rowData[objectProperty as keyof typeof rowData];
+        } else {
+          return initialCellValueBeforeRef.current;
+        }
+      } else {
+        return initialCellValueBeforeRef.current;
       }
+    } else {
+      return initialCellValueBeforeRef.current;
     }
   }, [initialData]);
 
@@ -522,6 +544,8 @@ interface LocalRowProps {
 }
 
 const LocalRow = ({ children, type = 'basic', id, headers, row, tableElement, className }: LocalRowProps) => {
+  useSignals();
+
   const initialData = useContext(InitialDataContext);
   const initialSetData = useContext(SetDataContext);
 
@@ -667,7 +691,7 @@ const LocalRow = ({ children, type = 'basic', id, headers, row, tableElement, cl
   const isRowNew = children.find((child) => child.key === 'isNew')?.props.children;
 
   useEffect(() => {
-    if (initialSetData) {
+    if (initialSetData && isUpdatingDataSignal.value === false) {
       initialSetData((currentValue) => {
         const copiedCurrentValue = [...currentValue];
 
@@ -760,6 +784,8 @@ const Table = <Data,>({
   onAdd,
   onDelete,
 }: TableProps<Data>) => {
+  useSignals();
+
   if (relationSetData) {
     setData = relationSetData;
   }
@@ -787,6 +813,8 @@ const Table = <Data,>({
 
   useEffect(() => {
     if (relationTableData !== null && relationTableData !== undefined && setDataFormPreviousTable !== null && SetInitialDataFromContext !== null) {
+      isUpdatingDataSignal.value = true;
+
       (async () => {
         const newData = await new Promise<any[]>((resolve) => {
           setDataFormPreviousTable((currentValue) => {
@@ -817,12 +845,20 @@ const Table = <Data,>({
           });
         });
 
-        setData(newData);
+        if (initialData.length < newData.length) {
+          setData(newData);
 
-        setInitialData(structuredClone(newData));
-        SetInitialDataFromContext(structuredClone(newData1));
+          setInitialData(structuredClone(newData));
+          SetInitialDataFromContext(structuredClone(newData1));
+        }
+
+        setTimeout(() => {
+          isUpdatingDataSignal.value = false;
+        }, 5);
       })();
     } else {
+      isUpdatingDataSignal.value = true;
+
       (async () => {
         const newData = await new Promise<any[]>((resolve) => {
           setData((currentValue) => {
@@ -833,6 +869,10 @@ const Table = <Data,>({
         });
 
         setInitialData(structuredClone(newData));
+
+        setTimeout(() => {
+          isUpdatingDataSignal.value = false;
+        }, 5);
       })();
     }
   }, [children.length]);

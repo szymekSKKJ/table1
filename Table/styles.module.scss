@@ -210,7 +210,8 @@
     flex-direction: column;
 
     .value {
-      width: 100%;
+      min-width: 100%;
+      width: max-content;
       height: var(--rowHeight);
       display: flex;
       align-items: center;
@@ -220,7 +221,7 @@
       padding: 0px 4px 0px 4px;
       position: relative;
       color: #4b5a68;
-      flex-shrink: 0;
+      flex: 1 0 auto;
 
       &:hover {
         background-color: #ecf1f8;

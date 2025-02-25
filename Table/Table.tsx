@@ -179,9 +179,10 @@ const ValuesPicker = ({ children, onSelect }: ValuesPickerProps) => {
 
 type CellProps = {
   key: string;
+  values?: string[];
   onClick?: (rowData: any, columnKey: string, event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   className?: string;
-  children?: string | boolean | JSX.Element;
+  children?: string | boolean | JSX.Element | string[];
   disabled?: boolean;
 };
 
@@ -200,7 +201,7 @@ const Row = ({ children }: RowProps) => {
 export { Row };
 
 interface LocalCellProps {
-  children?: string | boolean | JSX.Element;
+  children?: string | boolean | JSX.Element | string[];
   disabled?: boolean;
   className?: string;
   type?: 'basic' | 'header' | 'searcher';
@@ -243,6 +244,10 @@ const LocalCell = ({
 
   if (cellDataType === 'boleanValues') {
     values = [false, true];
+  }
+
+  if (Array.isArray(children) && children.every((value) => typeof value === 'string')) {
+    values = children;
   }
 
   if (cellDataType === 'boleanValues' && objectProperty === 'isSelected') {
@@ -301,6 +306,7 @@ const LocalCell = ({
           cellDataType === 'date' ||
           cellDataType === 'boleanValues' ||
           objectProperty === 'isSelected' ||
+          values !== undefined ||
           disabled === true
             ? false
             : true
@@ -480,7 +486,7 @@ const LocalCell = ({
           ></DataPicker>
         </div>
       )}
-      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && cellDataType === 'boleanValues' && (
+      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && values !== undefined && (
         <div
           className={`${styles.pickerWrapper}`}
           onMouseDown={(event) => {
@@ -743,6 +749,7 @@ const LocalRow = ({ children, type = 'basic', id, headers, row, tableElement, cl
                 setRelationTableData={setRelationTableData}
                 row={row}
                 column={index}
+                values={child.props.values}
                 disabled={child.props.disabled}
                 onClick={child.props.onClick}
               >

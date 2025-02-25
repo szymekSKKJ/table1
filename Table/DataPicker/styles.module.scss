@@ -1,0 +1,415 @@
+@import url("https://fonts.googleapis.com/css2?family=Yantramanav:wght@100;300;400;500;700;900&display=swap");
+
+.dataPicker {
+  $gap: 2cqw;
+
+  --background-color: #00a1e6;
+  --hover-color: rgba(255, 255, 255, 0.2);
+  --border-color: transparent;
+  --border-radius: 100%;
+  --font-color: white;
+  --componentBorderRadius: 4px;
+
+  min-width: 50px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1.2;
+  background-color: var(--background-color);
+  position: relative;
+  border-radius: var(--componentBorderRadius);
+  container-type: inline-size;
+  backdrop-filter: blur(12px);
+  outline: solid 2px var(--border-color);
+  box-sizing: border-box;
+
+  * {
+    font-family: "Yantramanav", sans-serif;
+    font-style: normal;
+    box-sizing: border-box;
+  }
+
+  > .header {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4cqw 2cqw 4cqw 2cqw;
+    gap: 3cqw;
+
+    > button {
+      width: 13cqw;
+      height: fit-content;
+      aspect-ratio: 1/1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: var(--border-radius);
+      background-color: rgba(255, 255, 255, 0);
+      transition: 250ms;
+      flex-shrink: 0;
+      border: none;
+      border: solid 1px var(--border-color);
+
+      &:hover {
+        background-color: var(--hover-color);
+      }
+
+      .icon {
+        width: auto;
+        height: 100%;
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2cqw;
+
+        svg {
+          width: auto;
+          height: 100%;
+        }
+      }
+    }
+
+    > p {
+      width: 100%;
+      height: 100%;
+      padding: 2cqw;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      color: var(--font-color);
+      font-size: 7cqw;
+      transition: 250ms;
+      background-color: rgba(255, 255, 255, 0);
+      border-radius: 1000px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--hover-color);
+      }
+    }
+  }
+
+  .dayNames {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    gap: $gap;
+    margin-bottom: 16px;
+    padding: 0px 2cqw 0px 2cqw;
+    transition: 250ms;
+    opacity: 1;
+
+    .dayName {
+      width: calc(100% / 7);
+      text-align: center;
+      color: var(--font-color);
+      font-weight: 400;
+      font-size: 6.5cqw;
+    }
+  }
+
+  .dayNames.close {
+    opacity: 0;
+  }
+
+  .content {
+    width: 100%;
+    height: fit-content;
+    padding: 0px 2cqw 0px 2cqw;
+
+    .years {
+      width: 100%;
+      height: calc(100% - 18.5cqw);
+      margin-top: 18.5cqw;
+      background-color: var(--background-color);
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 100;
+      display: flex;
+      align-items: flex-start;
+      align-content: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: $gap;
+      transition: opacity 333ms, transform 333ms;
+      transform: scale(0.8);
+      opacity: 0;
+      pointer-events: none;
+      padding: 0px 16px 0px 16px;
+
+      .year {
+        width: calc((100% / 4) - ($gap * (3 / 4)));
+        height: auto;
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 250ms;
+        background-color: rgba(255, 255, 255, 0);
+        color: var(--font-color);
+        border-radius: var(--border-radius);
+        font-size: 8cqw;
+        border: solid 1px var(--border-color);
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+      }
+
+      .year.current {
+        background-color: var(--hover-color);
+        font-weight: 500;
+      }
+    }
+
+    .months {
+      width: 100%;
+      height: calc(100% - 18.5cqw);
+      margin-top: 18.5cqw;
+      background-color: var(--background-color);
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 10;
+      display: flex;
+      align-items: flex-start;
+      align-content: flex-start;
+      flex-wrap: wrap;
+      gap: $gap;
+      transition: opacity 333ms, transform 333ms;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8);
+      padding: 0px 16px 0px 16px;
+
+      .month {
+        width: calc((100% / 4) - ($gap * (3 / 4)));
+        height: auto;
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 250ms;
+        background-color: rgba(255, 255, 255, 0);
+        color: var(--font-color);
+        border-radius: var(--border-radius);
+        font-size: 8cqw;
+        border: solid 1px var(--border-color);
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+      }
+
+      .month.current {
+        background-color: var(--hover-color);
+        font-weight: 500;
+      }
+    }
+
+    .months.open,
+    .years.open,
+    .timer.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: scale(1);
+    }
+
+    .days {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: $gap;
+
+      .day {
+        width: calc((100% / 7) - ($gap * (6 / 7)));
+        height: auto;
+        aspect-ratio: 1 / 1;
+        border-radius: var(--border-radius);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 250ms;
+        background-color: rgba(255, 255, 255, 0);
+        color: var(--font-color);
+        font-size: 7cqw;
+        border: solid 1px var(--border-color);
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+
+        &:empty {
+          border: none;
+
+          &:hover {
+            background-color: transparent !important;
+          }
+        }
+      }
+
+      .day.current {
+        background-color: var(--hover-color);
+        font-weight: 500;
+      }
+
+      .day.empty {
+        &:hover {
+          background-color: var(--hover-color);
+          cursor: default;
+        }
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--font-color);
+      border: solid 5px white;
+      border-radius: 1000px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--font-color);
+    }
+
+    .timer {
+      width: 100%;
+      height: 100%;
+      background-color: var(--background-color);
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      transition: opacity 333ms, transform 333ms;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8);
+      user-select: none;
+
+      .wrapper {
+        width: auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-grow: 1;
+        position: relative;
+
+        .transparentBackground {
+          width: calc(100% - 16px);
+          height: calc(50% - 12cqw);
+          background-color: rgba(0, 0, 0, 0);
+          backdrop-filter: blur(4px);
+          position: absolute;
+          z-index: 100;
+          left: 0px;
+          pointer-events: none;
+        }
+
+        .transparentBackground.up {
+          top: 0px;
+        }
+
+        .transparentBackground.down {
+          bottom: 0px;
+        }
+
+        .hours,
+        .minutes {
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          scroll-snap-type: y mandatory;
+          padding-top: 50cqw;
+          padding-bottom: 50cqw;
+
+          p {
+            width: 100%;
+            height: auto;
+            text-align: center;
+            font-size: 20cqw;
+            padding: 4cqw 0px 4cqw 0px;
+            scroll-snap-align: center;
+            line-height: 1;
+            color: var(--font-color);
+          }
+        }
+      }
+
+      .colon {
+        width: auto;
+        height: 100%;
+        font-size: 20cqw;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        transform: translate(-1cqw, -0.5cqw);
+      }
+    }
+
+    button.time {
+      width: calc((100% / 7) - ($gap * (6 / 7)));
+      height: auto;
+      aspect-ratio: 1/1;
+      background-color: rgba(255, 255, 255, 0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      outline: none;
+      transition: background-color 250ms;
+      cursor: pointer;
+      border-radius: 100%;
+      position: absolute;
+      bottom: 2cqw;
+      right: 2cqw;
+      border: solid 1px var(--border-color);
+      z-index: 1000000;
+
+      &:hover {
+        background-color: var(--hover-color);
+
+        svg {
+          opacity: 1;
+        }
+      }
+
+      svg {
+        width: 50%;
+        height: auto;
+        aspect-ratio: 1/1;
+        transition: 250ms;
+
+        path {
+          transition: 250ms;
+        }
+      }
+    }
+  }
+}

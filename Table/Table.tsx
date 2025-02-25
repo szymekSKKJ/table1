@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   cloneElement,
@@ -14,14 +14,14 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react";
-import styles from "./styles.module.scss";
-import { Plus_Jakarta_Sans } from "next/font/google";
-import DataPicker from "./DataPicker/DataPicker";
+} from 'react';
+import styles from './styles.module.scss';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import DataPicker from './DataPicker/DataPicker';
 
 type TableRowData = { id: string; isSelected: boolean; isNew: boolean; isModified: boolean };
 type Headers = { key: string; displayName: string }[];
-type CellDataType = "string" | "number" | "date" | "relation" | "null" | "values" | "boleanValues" | "checkbox";
+type CellDataType = 'string' | 'number' | 'date' | 'relation' | 'null' | 'values' | 'boleanValues' | 'checkbox';
 
 export type { TableRowData, Headers };
 
@@ -39,13 +39,13 @@ const SetResizingContext = createContext<Dispatch<
 > | null>(null);
 const SetSortingColumnContext = createContext<null | Dispatch<
   SetStateAction<{
-    type: "asc" | "desc";
+    type: 'asc' | 'desc';
     column: number;
   }>
 >>(null);
 const SetInitialDataContext = createContext<null | Dispatch<SetStateAction<TableRowData[]>>>(null);
 
-const PlusJakartaSansFont = Plus_Jakarta_Sans({ weight: ["400", "500"], subsets: ["latin"] });
+const PlusJakartaSansFont = Plus_Jakarta_Sans({ weight: ['400', '500'], subsets: ['latin'] });
 
 const arrayIcon = () => {
   return (
@@ -96,35 +96,35 @@ const saveIcon = () => {
 };
 
 const getCellDataType = (value: string | number | boolean | Date | any[] | null | JSX.Element | undefined): CellDataType => {
-  if (`${value}` === "false" || `${value}` === "true") {
-    return "boleanValues";
+  if (`${value}` === 'false' || `${value}` === 'true') {
+    return 'boleanValues';
   }
 
-  if (`${value}` === "null") {
-    return "null";
+  if (`${value}` === 'null') {
+    return 'null';
   }
 
-  if (typeof value === "number") {
-    return "number";
+  if (typeof value === 'number') {
+    return 'number';
   }
 
-  if (typeof value === "string") {
-    return "string";
+  if (typeof value === 'string') {
+    return 'string';
   }
 
-  if (Object.prototype.toString.call(value) === "[object Date]") {
-    return "date";
+  if (Object.prototype.toString.call(value) === '[object Date]') {
+    return 'date';
   }
 
   if (Array.isArray(value)) {
-    return "values";
+    return 'values';
   }
 
   if (isValidElement(value)) {
-    return "relation";
+    return 'relation';
   }
 
-  return "string";
+  return 'string';
 };
 
 interface CheckboxProps {
@@ -141,7 +141,7 @@ const Checkbox = ({ onToggle, defaultValue = false }: CheckboxProps) => {
 
   return (
     <div
-      className={`${styles.checkbox} ${isChecked ? styles.checked : ""}`}
+      className={`${styles.checkbox} ${isChecked ? styles.checked : ''}`}
       onClick={() => {
         setIsChecked((currentValue) => (currentValue === false ? true : false));
 
@@ -198,7 +198,7 @@ interface LocalCellProps {
   children?: string | boolean | JSX.Element;
   disabled?: boolean;
   className?: string;
-  type?: "basic" | "header" | "searcher";
+  type?: 'basic' | 'header' | 'searcher';
   cellDataType?: CellDataType;
   objectProperty?: string;
   rowId?: string;
@@ -223,7 +223,7 @@ const LocalCell = ({
   type,
   objectProperty,
   rowId,
-  cellDataType = "string",
+  cellDataType = 'string',
   column,
   row,
   values,
@@ -234,12 +234,12 @@ const LocalCell = ({
 }: LocalCellProps) => {
   cellDataType = getCellDataType(children);
 
-  if (cellDataType === "boleanValues") {
+  if (cellDataType === 'boleanValues') {
     values = [false, true];
   }
 
-  if (cellDataType === "boleanValues" && objectProperty === "isSelected") {
-    cellDataType = "checkbox";
+  if (cellDataType === 'boleanValues' && objectProperty === 'isSelected') {
+    cellDataType = 'checkbox';
   }
 
   const setData = useContext(SetDataContext);
@@ -252,7 +252,7 @@ const LocalCell = ({
   const [hasFocus, setHasFocus] = useState(false);
 
   const initialCellValue = useMemo(() => {
-    if (cellDataType !== "relation" && initialData.length !== 0) {
+    if (cellDataType !== 'relation' && initialData.length !== 0) {
       const rowData = initialData.find((data) => data.id === rowId);
 
       if (rowData) {
@@ -263,22 +263,22 @@ const LocalCell = ({
 
   return (
     <div
-      className={`${styles.cell} ${className !== undefined ? className : ""}  ${
-        initialCellValue !== undefined && `${initialCellValue}` !== `${children}` && type === "basic" && cellDataType !== "relation"
+      className={`${styles.cell} ${className !== undefined ? className : ''}  ${
+        initialCellValue !== undefined && `${initialCellValue}` !== `${children}` && type === 'basic' && cellDataType !== 'relation'
           ? styles.edited
-          : ""
-      } ${objectProperty === "isSelected" ? styles.select : ""}`}
+          : ''
+      } ${objectProperty === 'isSelected' ? styles.select : ''}`}
       data-row={`${row}`}
       data-column={`${column}`}
     >
       <div
         className={`${styles.content}`}
         contentEditable={
-          type === "header" ||
-          cellDataType === "relation" ||
-          cellDataType === "date" ||
-          cellDataType === "boleanValues" ||
-          objectProperty === "isSelected" ||
+          type === 'header' ||
+          cellDataType === 'relation' ||
+          cellDataType === 'date' ||
+          cellDataType === 'boleanValues' ||
+          objectProperty === 'isSelected' ||
           disabled === true
             ? false
             : true
@@ -290,7 +290,7 @@ const LocalCell = ({
           setHasFocus(true);
 
           if (disabled === false) {
-            if (cellDataType === "relation" && objectProperty && setRelationTableData && row !== undefined && rowId !== undefined) {
+            if (cellDataType === 'relation' && objectProperty && setRelationTableData && row !== undefined && rowId !== undefined) {
               setRelationTableData((currentValue) => {
                 const copiedCurrentValue = currentValue === null ? null : { ...currentValue };
 
@@ -302,11 +302,11 @@ const LocalCell = ({
               });
             }
 
-            if (type === "header" && setSortingColumn && column !== undefined) {
+            if (type === 'header' && setSortingColumn && column !== undefined) {
               setSortingColumn((currentValue) => {
                 const copiedCurrentValue = { ...currentValue };
 
-                copiedCurrentValue.type = copiedCurrentValue.type === "asc" ? "desc" : "asc";
+                copiedCurrentValue.type = copiedCurrentValue.type === 'asc' ? 'desc' : 'asc';
                 copiedCurrentValue.column = column;
 
                 return copiedCurrentValue;
@@ -335,11 +335,11 @@ const LocalCell = ({
 
           if (
             setData &&
-            type === "basic" &&
-            cellDataType !== "relation" &&
-            cellDataType !== "date" &&
-            cellDataType !== "boleanValues" &&
-            cellDataType !== "checkbox" &&
+            type === 'basic' &&
+            cellDataType !== 'relation' &&
+            cellDataType !== 'date' &&
+            cellDataType !== 'boleanValues' &&
+            cellDataType !== 'checkbox' &&
             objectProperty
           ) {
             setData((currentValue) => {
@@ -358,25 +358,25 @@ const LocalCell = ({
         }}
       >
         {(() => {
-          if (cellDataType === "relation") {
+          if (cellDataType === 'relation') {
             return arrayIcon();
-          } else if (cellDataType === "date") {
+          } else if (cellDataType === 'date') {
             return new Date(children as string).toLocaleDateString(undefined, {
-              second: "numeric",
-              minute: "numeric",
-              hour: "numeric",
-              weekday: "short",
-              month: "long",
-              year: "numeric",
-              day: "numeric",
+              second: 'numeric',
+              minute: 'numeric',
+              hour: 'numeric',
+              weekday: 'short',
+              month: 'long',
+              year: 'numeric',
+              day: 'numeric',
             });
-          } else if (cellDataType === "checkbox" || objectProperty === "isSelected") {
+          } else if (cellDataType === 'checkbox' || objectProperty === 'isSelected') {
             return (
               <Checkbox
-                defaultValue={type === "header" ? false : (children as boolean)}
+                defaultValue={type === 'header' ? false : (children as boolean)}
                 onToggle={(value) => {
                   if (setData) {
-                    if (type === "header") {
+                    if (type === 'header') {
                       setData((currentValue) => {
                         const copiedCurrentValue = [...currentValue];
 
@@ -403,7 +403,7 @@ const LocalCell = ({
                 }}
               ></Checkbox>
             );
-          } else if (type === "searcher") {
+          } else if (type === 'searcher') {
             return (
               <input
                 placeholder="Search"
@@ -421,7 +421,7 @@ const LocalCell = ({
           }
         })()}
       </div>
-      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && type === "basic" && cellDataType === "date" && (
+      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && type === 'basic' && cellDataType === 'date' && (
         <div
           className={`${styles.pickerWrapper}`}
           onMouseDown={(event) => {
@@ -430,14 +430,14 @@ const LocalCell = ({
           }}
         >
           <DataPicker
-            type={"date-time"}
+            type={'date-time'}
             initialDate={new Date(children as string)}
             style={{
-              backgrondColor: "white",
-              fontColor: "#4b5a68",
-              hoverColor: "#ecf1f8",
-              borderColor: "transparent",
-              componentBorderRadius: "0px",
+              backgrondColor: 'white',
+              fontColor: '#4b5a68',
+              hoverColor: '#ecf1f8',
+              borderColor: 'transparent',
+              componentBorderRadius: '0px',
             }}
             onSave={(value) => {
               if (setData && objectProperty && disabled === false) {
@@ -458,7 +458,7 @@ const LocalCell = ({
           ></DataPicker>
         </div>
       )}
-      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && cellDataType === "boleanValues" && (
+      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && cellDataType === 'boleanValues' && (
         <div
           className={`${styles.pickerWrapper}`}
           onMouseDown={(event) => {
@@ -488,12 +488,12 @@ const LocalCell = ({
           </ValuesPicker>
         </div>
       )}
-      {type === "header" && (
+      {type === 'header' && (
         <div
           className={`${styles.resizing}`}
           onMouseDown={(event) => {
             if (setResizing && objectProperty && column !== undefined) {
-              window.document.documentElement.style.userSelect = "none";
+              window.document.documentElement.style.userSelect = 'none';
 
               setResizing({
                 initialCellWidth: ((event.currentTarget as HTMLDivElement).parentElement as HTMLDivElement).getBoundingClientRect().width,
@@ -513,7 +513,7 @@ const LocalCell = ({
 
 interface LocalRowProps {
   children: JSX.Element[];
-  type?: "basic" | "header" | "searcher";
+  type?: 'basic' | 'header' | 'searcher';
   id?: string;
   headers?: Headers;
   row?: number;
@@ -521,7 +521,7 @@ interface LocalRowProps {
   className?: string;
 }
 
-const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, className }: LocalRowProps) => {
+const LocalRow = ({ children, type = 'basic', id, headers, row, tableElement, className }: LocalRowProps) => {
   const initialData = useContext(InitialDataContext);
   const initialSetData = useContext(SetDataContext);
 
@@ -593,6 +593,10 @@ const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, cl
         setData(structuredClone(cellValue));
       })();
     }
+
+    if (tableElement !== null && tableElement !== undefined) {
+      tableElement.scrollLeft = 0;
+    }
   }, [relationTableData]);
 
   useEffect(() => {
@@ -600,7 +604,7 @@ const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, cl
       observerRef.current = new IntersectionObserver(
         (entries) => {
           entries.forEach(({ isIntersecting }) => {
-            if (type === "basic") {
+            if (type === 'basic') {
               setIsVisible(isIntersecting);
             }
 
@@ -610,7 +614,7 @@ const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, cl
           });
         },
         {
-          rootMargin: "500px 500px 500px 500px",
+          rootMargin: '500px 500px 500px 500px',
           threshold: 0,
         }
       );
@@ -659,8 +663,8 @@ const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, cl
     return sortedChildren;
   })() as ReactElement<CellProps>[];
 
-  const isRowSelected = children.find((child) => child.key === "isSelected")?.props.children;
-  const isRowNew = children.find((child) => child.key === "isNew")?.props.children;
+  const isRowSelected = children.find((child) => child.key === 'isSelected')?.props.children;
+  const isRowNew = children.find((child) => child.key === 'isNew')?.props.children;
 
   useEffect(() => {
     if (initialSetData) {
@@ -673,7 +677,7 @@ const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, cl
           const row = copiedCurrentValue.find((data) => data.id === id);
 
           const isRowModified = Object.entries(initialRowData).some(([key, value]) => {
-            if (key !== "isModified" && row !== undefined) {
+            if (key !== 'isModified' && row !== undefined) {
               //@ts-ignore
               return `${row[key]}` !== `${value}`;
             } else {
@@ -697,9 +701,9 @@ const LocalRow = ({ children, type = "basic", id, headers, row, tableElement, cl
 
   return (
     <div
-      className={`${styles.rowWrapper} ${className !== undefined ? className : ""} ${type === "header" ? styles.header : ""} ${
-        type === "searcher" ? styles.searcher : ""
-      } ${(isRowSelected || isRowNew) && type !== "header" ? styles.selected : ""}`}
+      className={`${styles.rowWrapper} ${className !== undefined ? className : ''} ${type === 'header' ? styles.header : ''} ${
+        type === 'searcher' ? styles.searcher : ''
+      } ${(isRowSelected || isRowNew) && type !== 'header' ? styles.selected : ''}`}
       ref={rowWrapperElementRef}
     >
       <div className={`${styles.row}`}>
@@ -748,7 +752,7 @@ const Table = <Data,>({
   headers,
   initialData: initialDataBefore,
   relationTableData,
-  emptyText = "Brak danych",
+  emptyText = 'Brak danych',
   setData,
   relationSetData,
   onSearch,
@@ -774,15 +778,15 @@ const Table = <Data,>({
     initialCellWidth: number;
   }>(null);
   const [sorting, setSorting] = useState<{
-    type: "asc" | "desc";
+    type: 'asc' | 'desc';
     column: number;
-  }>({ column: 0, type: "asc" });
+  }>({ column: 0, type: 'asc' });
   const [isSearcherOpen, setIsSearcherOpen] = useState(false);
 
   const tableElementRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
-    if (relationTableData !== null && relationTableData !== undefined && setDataFormPreviousTable !== null) {
+    if (relationTableData !== null && relationTableData !== undefined && setDataFormPreviousTable !== null && SetInitialDataFromContext !== null) {
       (async () => {
         const newData = await new Promise<any[]>((resolve) => {
           setDataFormPreviousTable((currentValue) => {
@@ -802,9 +806,21 @@ const Table = <Data,>({
           });
         });
 
+        const newData1 = await new Promise<any[]>((resolve) => {
+          setDataFormPreviousTable((currentValue) => {
+            const copiedCurrentValue = [...currentValue];
+
+            //@ts-ignore
+            resolve(structuredClone(copiedCurrentValue));
+
+            return currentValue;
+          });
+        });
+
         setData(newData);
 
         setInitialData(structuredClone(newData));
+        SetInitialDataFromContext(structuredClone(newData1));
       })();
     } else {
       (async () => {
@@ -830,11 +846,11 @@ const Table = <Data,>({
 
         copiedCurrentValue.sort((a, b) =>
           a[headerObjectProperty as keyof typeof a] > b[headerObjectProperty as keyof typeof b]
-            ? sorting.type === "asc"
+            ? sorting.type === 'asc'
               ? 1
               : -1
             : b[headerObjectProperty as keyof typeof b] > a[headerObjectProperty as keyof typeof a]
-            ? sorting.type === "desc"
+            ? sorting.type === 'desc'
               ? 1
               : -1
             : 0
@@ -867,19 +883,19 @@ const Table = <Data,>({
         });
       };
 
-      window.addEventListener("mousemove", mousemove);
+      window.addEventListener('mousemove', mousemove);
 
       const mouseup = (event: MouseEvent) => {
-        window.document.documentElement.style.userSelect = "none";
+        window.document.documentElement.style.userSelect = 'none';
 
         setResizing(null);
       };
 
-      window.addEventListener("mouseup", mouseup);
+      window.addEventListener('mouseup', mouseup);
 
       return () => {
-        window.removeEventListener("mousemove", mousemove);
-        window.removeEventListener("mousemove", mouseup);
+        window.removeEventListener('mousemove', mousemove);
+        window.removeEventListener('mousemove', mouseup);
       };
     }
   }, [resizing]);
@@ -907,27 +923,27 @@ const Table = <Data,>({
       const missingTypes: string[] = [];
 
       initialData.forEach((data) => {
-        if (data.hasOwnProperty("id") === false) {
-          if (missingTypes.find((value) => value === "id") === undefined) {
-            missingTypes.push("id");
+        if (data.hasOwnProperty('id') === false) {
+          if (missingTypes.find((value) => value === 'id') === undefined) {
+            missingTypes.push('id');
           }
         }
 
-        if (data.hasOwnProperty("isSelected") === false) {
-          if (missingTypes.find((value) => value === "isSelected") === undefined) {
-            missingTypes.push("isSelected");
+        if (data.hasOwnProperty('isSelected') === false) {
+          if (missingTypes.find((value) => value === 'isSelected') === undefined) {
+            missingTypes.push('isSelected');
           }
         }
 
-        if (data.hasOwnProperty("isNew") === false) {
-          if (missingTypes.find((value) => value === "isNew") === undefined) {
-            missingTypes.push("isNew");
+        if (data.hasOwnProperty('isNew') === false) {
+          if (missingTypes.find((value) => value === 'isNew') === undefined) {
+            missingTypes.push('isNew');
           }
         }
 
-        if (data.hasOwnProperty("isModified") === false) {
-          if (missingTypes.find((value) => value === "isModified") === undefined) {
-            missingTypes.push("isModified");
+        if (data.hasOwnProperty('isModified') === false) {
+          if (missingTypes.find((value) => value === 'isModified') === undefined) {
+            missingTypes.push('isModified');
           }
         }
       });
@@ -936,7 +952,7 @@ const Table = <Data,>({
         throw new Error(
           `Given data has invalid structure. Make sure if every object has "id", "isSelected", "isNew", "isModified". You can import "TableRowData" type to ensure types. Missing types: ${missingTypes
             .map((value) => `"${value}"`)
-            .join(", ")}.`
+            .join(', ')}.`
         );
       }
     })();
@@ -949,7 +965,7 @@ const Table = <Data,>({
       ) as unknown as HTMLDivElement[];
       const { width } = tableElementRef.current.getBoundingClientRect();
       const tableElementWidthWithoutScrollBar = width - (16 + 2); // 16 is scroll bar width from css
-      const hasHeaderSelectCell = headers.some((data) => data.key === "isSelected");
+      const hasHeaderSelectCell = headers.some((data) => data.key === 'isSelected');
 
       cellElements.forEach((element) => {
         if (hasHeaderSelectCell) {
@@ -979,8 +995,8 @@ const Table = <Data,>({
           <InitialDataContext.Provider value={initialData}>
             <SetDataContext.Provider value={setData as Dispatch<SetStateAction<TableRowData[]>>}>
               <div
-                className={`${styles.tableWrapper} ${Object.values(loading).some((value) => value === true) ? styles.loading : ""} ${
-                  isSearcherOpen ? styles.searcherOpen : ""
+                className={`${styles.tableWrapper} ${Object.values(loading).some((value) => value === true) ? styles.loading : ''} ${
+                  isSearcherOpen ? styles.searcherOpen : ''
                 }`}
               >
                 <div className={`${styles.table} ${PlusJakartaSansFont.className}`} ref={tableElementRef}>
@@ -1025,7 +1041,7 @@ const Table = <Data,>({
                 </div>
                 <div className={`${styles.menu}`}>
                   <button
-                    className={`saveDataToTableButton ${SetInitialDataFromContext !== null ? styles.hidden : ""}`}
+                    className={`saveDataToTableButton ${SetInitialDataFromContext !== null ? styles.hidden : ''}`}
                     onClick={async () => {
                       if (onSave) {
                         onSave();

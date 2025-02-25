@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 .tableWrapper {
   --rowHeight: 40px;
@@ -19,7 +19,7 @@
   background-color: var(--backgroundColor);
   transform: translateZ(0);
   cursor: context-menu;
-  font-family: "Plus Jakarta Sans", serif;
+  font-family: 'Plus Jakarta Sans', serif;
   position: relative;
 
   ::-webkit-scrollbar {
@@ -82,7 +82,7 @@
           }
 
           &::after {
-            content: "";
+            content: '';
             width: calc(100%);
             height: calc(100%);
             position: absolute;
@@ -306,8 +306,9 @@
   .tableWrapper {
     --insideOffset: var(--scrollbarWidth);
 
-    min-width: calc(100% - (2 * var(--insideOffset)));
-    margin: var(--insideOffset) 0px var(--insideOffset) 0px;
+    width: 100%;
+    // min-width: calc(100% - (2 * var(--insideOffset)));
+    padding: var(--insideOffset);
 
     .table {
       scrollbar-gutter: stable both-edges;

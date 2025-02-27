@@ -24,7 +24,7 @@ import { signal } from '@preact/signals-react';
 
 type TableRowData = { id: string; isSelected: boolean; isNew: boolean; isModified: boolean };
 type Headers = { key: string; displayName: string }[];
-type CellDataType = 'string' | 'number' | 'date' | 'relation' | 'null' | 'values' | 'boleanValues' | 'checkbox';
+type CellDataType = 'string' | 'number' | 'date' | 'relation' | 'null' | 'values' | 'boleanValues' | 'checkbox' | 'button';
 
 export type { TableRowData, Headers };
 
@@ -126,10 +126,26 @@ const getCellDataType = (value: string | number | boolean | Date | any[] | null 
   }
 
   if (isValidElement(value)) {
-    return 'relation';
+    if (value.type === 'button') {
+      return 'button';
+    } else {
+      return 'relation';
+    }
   }
 
   return 'string';
+};
+
+const formattDataToType = (value: string) => {
+  if (value == 'null') {
+    return null;
+  } else if (value == 'false') {
+    return false;
+  } else if (value == 'true') {
+    return true;
+  } else {
+    return `${value}`;
+  }
 };
 
 interface CheckboxProps {
@@ -192,7 +208,7 @@ const Cell = ({ children }: CellProps) => {
 
 export { Cell };
 
-type RowProps = { key: string; children: JSX.Element[]; className?: string };
+type RowProps = { key: string; children: JSX.Element[] | JSX.Element; className?: string };
 
 const Row = ({ children }: RowProps) => {
   return children;
@@ -266,7 +282,7 @@ const LocalCell = ({
   const initialCellValueBeforeRef = useRef<string | boolean | undefined>(undefined);
 
   const initialCellValue = useMemo(() => {
-    if (cellDataType !== 'relation' && initialData.length !== 0) {
+    if (cellDataType !== 'relation' && cellDataType !== 'button' && initialData.length !== 0) {
       const rowData = initialData.find((data) => data.id === rowId);
 
       if (rowData) {
@@ -307,7 +323,8 @@ const LocalCell = ({
           cellDataType === 'boleanValues' ||
           objectProperty === 'isSelected' ||
           values !== undefined ||
-          disabled === true
+          disabled === true ||
+          cellDataType === 'button'
             ? false
             : true
         }
@@ -370,6 +387,8 @@ const LocalCell = ({
             cellDataType !== 'checkbox' &&
             objectProperty
           ) {
+            const formattedNewData = formattDataToType(thisElement.innerText);
+
             setData((currentValue) => {
               const copiedCurrentValue = [...currentValue];
 
@@ -377,7 +396,7 @@ const LocalCell = ({
 
               if (rowData) {
                 //@ts-expect-error this shouldnt give an error (otherwise the provided object property does not exist)
-                rowData[objectProperty as keyof typeof rowData] = thisElement.innerText;
+                rowData[objectProperty as keyof typeof rowData] = formattedNewData;
               }
 
               return copiedCurrentValue;
@@ -388,6 +407,10 @@ const LocalCell = ({
         {(() => {
           if (cellDataType === 'relation') {
             return arrayIcon();
+          } else if (cellDataType === 'button') {
+            return cloneElement(children as JSX.Element, {
+              className: `${styles.cellButton}`,
+            });
           } else if (cellDataType === 'date') {
             return new Date(children as string).toLocaleDateString(undefined, {
               second: 'numeric',
@@ -476,7 +499,7 @@ const LocalCell = ({
 
                   if (rowData) {
                     //@ts-expect-error this shouldnt give an error (otherwise the provided object property does not exist)
-                    rowData[objectProperty as keyof typeof rowData] = value;
+                    rowData[objectProperty as keyof typeof rowData] = value.toISOString();
                   }
 
                   return copiedCurrentValue;
@@ -486,36 +509,42 @@ const LocalCell = ({
           ></DataPicker>
         </div>
       )}
-      {disabled === false && hasFocus && document.activeElement === contentElementRef.current && values !== undefined && (
-        <div
-          className={`${styles.pickerWrapper}`}
-          onMouseDown={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-          }}
-        >
-          <ValuesPicker
-            onSelect={(value) => {
-              if (setData && disabled === false) {
-                setData((currentValue) => {
-                  const copiedCurrentValue = [...currentValue];
-
-                  const rowData = copiedCurrentValue.find((data) => data.id === rowId);
-
-                  if (rowData) {
-                    //@ts-expect-error this shouldnt give an error (otherwise the provided object property does not exist)
-                    rowData[objectProperty as keyof typeof rowData] = value;
-                  }
-
-                  return copiedCurrentValue;
-                });
-              }
+      {disabled === false &&
+        hasFocus &&
+        document.activeElement === contentElementRef.current &&
+        values !== undefined &&
+        cellDataType !== 'checkbox' && (
+          <div
+            className={`${styles.pickerWrapper}`}
+            onMouseDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
             }}
           >
-            {values!}
-          </ValuesPicker>
-        </div>
-      )}
+            <ValuesPicker
+              onSelect={(value) => {
+                if (setData && disabled === false) {
+                  const formattedNewData = formattDataToType(value);
+
+                  setData((currentValue) => {
+                    const copiedCurrentValue = [...currentValue];
+
+                    const rowData = copiedCurrentValue.find((data) => data.id === rowId);
+
+                    if (rowData) {
+                      //@ts-expect-error this shouldnt give an error (otherwise the provided object property does not exist)
+                      rowData[objectProperty as keyof typeof rowData] = formattedNewData;
+                    }
+
+                    return copiedCurrentValue;
+                  });
+                }
+              }}
+            >
+              {values!}
+            </ValuesPicker>
+          </div>
+        )}
       {type === 'header' && (
         <div
           className={`${styles.resizing}`}
@@ -1094,26 +1123,26 @@ const Table = <Data,>({
                         onSave();
                       }
 
-                      const allSaveButtons = [...tableElementRef.current!.querySelectorAll(`.saveDataToTableButton`)] as HTMLButtonElement[];
+                      // const allSaveButtons = [...tableElementRef.current!.querySelectorAll(`.saveDataToTableButton`)] as HTMLButtonElement[];
 
-                      allSaveButtons.forEach((element) => element.click());
+                      // allSaveButtons.forEach((element) => element.click());
 
-                      const initialData = await new Promise<TableRowData[]>((resolve) => {
-                        setData((currentValue) => {
-                          const copiedCurrentValue = [...currentValue];
+                      // const initialData = await new Promise<TableRowData[]>((resolve) => {
+                      //   setData((currentValue) => {
+                      //     const copiedCurrentValue = [...currentValue];
 
-                          copiedCurrentValue.forEach((data) => {
-                            data.isNew = false;
-                            data.isModified = false;
-                          });
+                      //     copiedCurrentValue.forEach((data) => {
+                      //       data.isNew = false;
+                      //       data.isModified = false;
+                      //     });
 
-                          resolve(copiedCurrentValue);
+                      //     resolve(copiedCurrentValue);
 
-                          return copiedCurrentValue;
-                        });
-                      });
+                      //     return copiedCurrentValue;
+                      //   });
+                      // });
 
-                      setInitialData(structuredClone(initialData));
+                      // setInitialData(structuredClone(initialData));
                     }}
                   >
                     {saveIcon()}

@@ -1,18 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 .tableWrapper {
-  --rowHeight: 40px;
+  --rowHeight: 45px;
   --borderColor: #d0d7e1;
   --backgroundColor: #d0d7e1;
+
   --cellBackgroundColor: white;
-
   --cellBackgroundColorHover: #ecf1f8;
-
   --cellBorderColorFocus: #00a3ec;
-
   --cellBackgroundColorEdited: #ffee99;
+  --cellFontColor: #4b5a68;
 
   --scrollbarWidth: 16px;
+
+  --cellButtonBackgroundColor: #f2f2f2;
+  --cellButtonBackgroundColorHover: #e6e6e6;
 
   width: 100%;
   height: 100%;
@@ -57,7 +59,7 @@
     .rowWrapper {
       width: min-content;
       height: auto;
-      color: #4b5a68;
+      color: var(--cellFontColor);
       font-weight: 400;
       font-size: 16px;
 
@@ -133,6 +135,27 @@
             z-index: 10000000000;
           }
 
+          button.cellButton {
+            width: 100%;
+            height: auto;
+            background-color: var(--cellButtonBackgroundColor);
+            padding: 4px 12px 4px 12px;
+            font-size: 13px;
+            font-family: 'Plus Jakarta Sans', serif;
+            font-weight: 500;
+            text-align: center;
+            border: solid 1px var(--borderColor);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: 250ms;
+            color: var(--cellFontColor);
+            outline: none;
+
+            &:hover {
+              background-color: var(--cellButtonBackgroundColorHover);
+            }
+          }
+
           input {
             width: 100%;
             height: auto;
@@ -187,7 +210,7 @@
       position: sticky;
       top: calc(var(--rowHeight) + 2px);
       z-index: 1000000;
-      margin-bottom: -44px;
+      margin-bottom: calc((var(--rowHeight) * -1) - 4px);
       transform: translateY(-100%);
       transition: 250ms margin-bottom, 250ms transform;
 
@@ -221,7 +244,7 @@
       cursor: context-menu;
       padding: 0px 4px 0px 4px;
       position: relative;
-      color: #4b5a68;
+      color: var(--cellFontColor);
       flex: 1 0 auto;
 
       &:hover {
@@ -238,7 +261,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: solid 1px #4b5a68;
+    border: solid 1px var(--cellFontColor);
 
     > .icon {
       width: 100%;
@@ -252,7 +275,7 @@
       svg {
         width: auto;
         height: 90%;
-        fill: #4b5a68;
+        fill: var(--cellFontColor);
         transform: translate(1px, 0px);
       }
     }
@@ -296,7 +319,7 @@
       svg {
         width: 70%;
         height: auto;
-        fill: #4b5a68;
+        fill: var(--cellFontColor);
       }
     }
 
